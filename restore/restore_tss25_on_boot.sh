@@ -174,10 +174,24 @@ restore_sienna_traffic_light_watchdog() {
 restore_sienna_traffic_light_watchdog
 
 restore_sienna_intersection_distance_sidecar() {
+  local context_py="${OPENPILOT_DIR}/tools/sienna_tss25_plus/osm_route_context.py"
+  local context_restore="${CUSTOM_DIR}/osm_route_context_restore.py"
   local sidecar_py="${OPENPILOT_DIR}/tools/sienna_tss25_plus/sienna_intersection_distance_sidecar.py"
   local sidecar_restore="${CUSTOM_DIR}/sienna_intersection_distance_sidecar_restore.py"
   local start_py="/data/tools/SiennaTSS25Plus_route_receiver/start_intersection_distance_sidecar.sh"
   local start_restore="${CUSTOM_DIR}/start_intersection_distance_sidecar_restore.sh"
+  if [ -f "${context_restore}" ]; then
+    if [ ! -f "${context_py}" ] || ! grep -q "def project_to_route" "${context_py}" 2>/dev/null; then
+      if "${PYTHON_BIN}" -m py_compile "${context_restore}" >/dev/null 2>&1; then
+        if [ -f "${context_py}" ]; then
+          cp "${context_py}" "${context_py}.bak_intersection_context_restore_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
+        fi
+        mkdir -p "$(dirname "${context_py}")"
+        cp "${context_restore}" "${context_py}"
+        chmod +x "${context_py}" 2>/dev/null || true
+      fi
+    fi
+  fi
   if [ -f "${sidecar_restore}" ]; then
     if [ ! -f "${sidecar_py}" ] || ! grep -q "intersection_distance_sidecar" "${sidecar_py}" 2>/dev/null; then
       if "${PYTHON_BIN}" -m py_compile "${sidecar_restore}" >/dev/null 2>&1; then
