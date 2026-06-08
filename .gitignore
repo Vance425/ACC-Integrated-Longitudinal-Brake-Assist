@@ -1,0 +1,38 @@
+# Sensitive driving data
+*.qlog
+*.qlog.zst
+*.rlog
+*.rlog.zst
+*.ts
+*.hevc
+*.mp4
+*.mov
+*.mkv
+qlog/
+qlogs/
+qcamera/
+camera/
+routes/
+raw_logs/
+
+# Location-bearing generated outputs
+*.csv
+*.jsonl
+*_replay_*.geojson
+synthetic_*.geojson
+
+# Python/runtime artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local device/install artifacts
+*.tar.gz
+*.zip
+*.apk
+*.patch.applied
+*.bak
+*.pid
+*.log
+
