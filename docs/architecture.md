@@ -1,37 +1,37 @@
-# Architecture
+# 系統架構
 
-## High-Level Flow
+## 整體流程
 
 ```mermaid
 flowchart LR
-  Camera["traffic_light_sidecar / camera signal"] --> Intent["red-light intent"]
-  GPS["qlog/C3X GPS + heading"] --> Distance["intersection distance sidecar"]
-  OSM["local OSM event GeoJSON"] --> Distance
-  Route["optional route polyline"] --> Distance
+  Camera["紅燈 sidecar / camera 訊號"] --> Intent["紅燈停車意圖"]
+  GPS["C3X GPS / heading"] --> Distance["路口距離 sidecar"]
+  OSM["本地 OSM 事件 GeoJSON"] --> Distance
+  Route["可選 route polyline"] --> Distance
   Distance --> Context["/data/sienna_route/osm_context.json"]
-  Context --> Planner["longitudinal planner TSS3-lite"]
+  Context --> Planner["TSS3-lite longitudinal planner"]
   Intent --> Planner
-  Planner --> UI["status overlay + brake bar"]
-  Planner --> LongPlan["longitudinalPlan / OP-long path"]
+  Planner --> UI["狀態燈 + STOP LINE + 剎車色條"]
+  Planner --> LongPlan["longitudinalPlan / OP-long"]
 ```
 
-## Distance Source Priority
+## 距離來源優先順序
 
-1. Route-projected OSM event distance when route polyline exists.
-2. GPS heading-cone OSM event distance when no route exists.
-3. External bridge `/intersection_distance` for fallback/manual validation.
-4. Camera FAR/MID/NEAR only as a weak fallback when no distance exists.
+1. 有 route 時，使用 route-projected OSM event distance。
+2. 沒 route 時，使用 GPS heading-cone OSM event distance。
+3. 外部 `/intersection_distance` bridge，只作為備援或人工驗證。
+4. Camera FAR/MID/NEAR 僅作弱 fallback，不當作真正距離。
 
-## Low-Load Design
+## 低負載原則
 
-- No full OSM sidecar autostart for this layer.
-- OSM GeoJSON is parsed only on file mtime change.
-- Runtime loop queries a small grid around the current GPS point.
-- Default period is `1.5 s`.
-- Distance calculation runs only when enabled, onroad, moving, and GPS is available.
-- Logs rotate at a small size to reduce disk risk.
+- 不自動啟動完整 OSM sidecar。
+- OSM GeoJSON 只在檔案 mtime 變化時重新載入。
+- runtime 只查 GPS 附近 grid cell，不掃全圖。
+- 預設週期 `1.5 s`。
+- 只有 onroad、enabled、車子有移動、GPS 有值時才計算。
+- log 小容量輪替，避免磁碟空間異常。
 
-## Main Runtime Params
+## 主要參數
 
 - `SiennaIntersectionDistanceAssist=1`
 - `SiennaIntersectionDistancePeriodS=1.5`
@@ -43,9 +43,9 @@ flowchart LR
 - `SiennaIntersectionDistanceMaxLateralM=55.0`
 - `SiennaIntersectionDistanceEventCrossTrackM=45.0`
 
-## Output Contract
+## 輸出格式
 
-The distance sidecar writes planner-readable context similar to:
+sidecar 會寫出 planner 可讀的 context，例如：
 
 ```json
 {
@@ -64,5 +64,5 @@ The distance sidecar writes planner-readable context similar to:
 }
 ```
 
-The red-light planner should use this distance only after camera/sidecar red intent is already present. GPS/OSM distance should not create stop intent by itself.
+重要原則：GPS/OSM 距離只能在紅燈意圖已存在時幫助決定剎車時機，不能自己創造「該停車」的判斷。
 

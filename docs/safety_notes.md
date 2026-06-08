@@ -1,34 +1,34 @@
-# Safety Notes
+# 安全注意
 
-This project is experimental and vehicle-specific.
+這是實驗性、車輛特定的 longitudinal 輔助研究。
 
-## Non-Negotiables
+## 不可退讓的原則
 
-- Do not let OSM map distance create a stop decision by itself.
-- Camera/sidecar red-light intent must already exist before distance-assisted red-light prepare/braking is used.
-- Driver override must always win.
-- Avoid automatic openpilot restart during road use.
-- Sidecar watchdog may restart sidecars, but must not restart openpilot automatically.
-- Keep CPU/disk load low on C3X.
+- OSM 距離不能單獨創造停車決策。
+- 必須先有 camera/sidecar 紅燈意圖，距離才可用於 prepare/braking。
+- 駕駛補油、踩剎車、接管永遠優先。
+- 行車中不要自動重啟 openpilot。
+- watchdog 可以重啟 sidecar，但不能自動重啟 openpilot。
+- C3X CPU、記憶體、磁碟負載必須保守。
 
-## Known Risks
+## 已知風險
 
-- Mixed traffic-light heads can be misclassified by camera-only logic.
-- FAR/MID/NEAR visual range is not a physical distance measurement.
-- OSM event points can be offset from the actual stop line.
-- Heading-only no-route matching can select a nearby parallel road or future intersection if the cone is too wide.
-- qlog replay validates decision logic, not final Toyota actuation.
-- UI status can lag if sidecar/debug state goes stale.
+- 混合燈號可能被 camera-only 邏輯誤判。
+- FAR/MID/NEAR 是影像狀態，不是物理距離。
+- OSM traffic signal 點位可能離實際停止線有偏移。
+- 沒 route 時，heading cone 可能抓到平行道路或下一個路口。
+- qlog replay 能驗證邏輯，不等於 Toyota/ACC 一定執行。
+- UI 狀態如果 sidecar stale，可能讓駕駛誤以為功能還在跑。
 
-## Privacy Risks
+## 隱私風險
 
-qlogs and replay CSVs often contain GPS coordinates and should not be committed.
+qlog 和 replay CSV 通常含 GPS 座標，不應 commit。
 
-Before making anything public, scrub:
+公開前必須清理：
 
-- qlog/qcamera
-- CSV/JSONL containing lat/lon
-- VIN/dongle identifiers
-- license plates and faces in images/video
-- raw CAN dumps
+- qlog / qcamera
+- 含 lat/lon 的 CSV / JSONL
+- VIN / DongleId
+- 車牌、人臉、地點截圖
+- raw CAN dump
 

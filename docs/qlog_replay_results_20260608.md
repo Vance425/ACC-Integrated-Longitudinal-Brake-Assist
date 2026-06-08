@@ -1,72 +1,85 @@
-# qlog Replay Results 2026-06-08
+# qlog Replay 結果 2026-06-08
 
-## Purpose
+## 目的
 
-Replay qlog GPS/carState/longitudinalPlan samples through the local GPS+OSM distance logic and record the cost of each distance-generation step.
+用 qlog 裡的 GPS、carState、longitudinalPlan，離線套用目前 GPS+OSM 路口距離邏輯，產出一張表。
 
-The output table includes `distance_compute_ms` for every replayed row.
+表格重點欄位：
 
-## Local Dependency Setup
+- `distance_m`
+- `distance_mode`
+- `distance_phase`
+- `requested_decel_mps2`
+- `distance_compute_ms`
+- `v_kph`
+- `plan_a_target`
+- `plan_should_stop`
+- `red_present`
+- `signal_range`
 
-Windows qlog parsing needed local dependencies installed outside OneDrive:
+## 本地依賴
+
+Windows 上讀 qlog 需要額外依賴，安裝到 D:\Temp，不放 OneDrive：
 
 ```powershell
 python -m pip install --target D:\Temp\qlog_pydeps_20260608 zstandard pycapnp
 ```
 
-The replay tool uses `D:\Codex\.qlog_schema\cereal\log.capnp` when a full openpilot checkout is not available.
+沒有完整 openpilot checkout 時，工具會使用：
 
-## Baseline Without OSM Event Map
+`D:\Codex\.qlog_schema\cereal\log.capnp`
 
-Input qlog directories:
+## 沒有 OSM event map 的基準測試
+
+測試 qlog：
 
 - `D:\Codex\commaai\20260608.2`
 - `D:\Codex\commaai\20260608.1`
 - `D:\Codex\commaai\20260607.2`
 
-Output was written locally to:
+輸出：
 
-- `D:\Temp\c3x_osm_distance_20260608\qlog_distance_replay_baseline_no_map.csv`
+`D:\Temp\c3x_osm_distance_20260608\qlog_distance_replay_baseline_no_map.csv`
 
-This CSV is not committed because it contains GPS coordinates.
+這個 CSV 含 GPS 座標，不 commit。
 
-Rows:
+row 數：
 
 - `20260608.2`: 682
 - `20260608.1`: 768
 - `20260607.2`: 344
-- Total: 1794
+- 合計: 1794
 
-Compute cost without an OSM map:
+沒有 OSM map 時的計算耗時：
 
-| qlog | avg ms | p95 ms | p99 ms | max ms |
+| qlog | 平均 ms | P95 ms | P99 ms | 最大 ms |
 |---|---:|---:|---:|---:|
 | 20260608.2 | 0.5601 | 1.106 | 1.412 | 1.944 |
 | 20260608.1 | 0.6877 | 1.255 | 1.651 | 2.453 |
 | 20260607.2 | 0.7303 | 1.382 | 1.907 | 2.121 |
 
-All baseline rows showed `osm_geojson_missing`, so this validates replay mechanics and low idle cost, not real intersection distance.
+所有 row 都是 `osm_geojson_missing`，所以這只驗證 replay 流程與空地圖負載，不代表真實距離。
 
-## Synthetic OSM Event Test
+## 合成 OSM 紅綠燈測試
 
-A synthetic traffic-signal point was placed about 120 m ahead of the first qlog GPS sample in `20260608.2`.
+用 `20260608.2` 第一筆 GPS，在車頭前方約 120m 放一個合成 traffic signal。
 
-Result:
+結果：
 
-- Rows: 682
-- Rows with a heading distance match: 8
-- Average compute cost: 0.4359 ms
+- rows: 682
+- 有 heading distance match 的 rows: 8
+- 平均耗時: 0.4359 ms
 - P95: 0.841 ms
 - P99: 1.418 ms
-- Max: 1.602 ms
+- 最大: 1.602 ms
 
-First matched row:
+第一筆 match：
 
-- distance: 120.0 m
-- mode: `osm_geojson_heading`
+- 距離: 120.0 m
+- 模式: `osm_geojson_heading`
 - phase: `prepare_slow`
-- requested decel: `0.45 m/s^2`
-- compute time: `0.59 ms`
+- 要求減速度: `0.45 m/s^2`
+- 計算耗時: `0.59 ms`
 
-This verifies the replay table and distance timing path. It does not validate real-world OSM event accuracy.
+這代表 replay 表格和距離耗時測量可用，但還不代表真實 OSM event 位置準確。
 
