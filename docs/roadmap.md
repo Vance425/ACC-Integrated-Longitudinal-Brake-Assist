@@ -1,5 +1,15 @@
 # 下一步規劃
 
+## 2026-06-13 優先項
+
+- 先用最新 qlog 統計 `gps_distance_fail_reason` / `osm_stop_candidate_reason`，確認紅燈距離失效主要原因。
+- 若主要是 `NO RED TARGET`，優先修本車道燈號與混合燈號目標選擇。
+- 若主要是 `GPS NO MAP` / `OSM NO ROUTE`，優先修 intersection distance sidecar 與 OSM 候選路口。
+- 若主要是 `GPS FAR`，調整 GPS start/soft/brake/hard bands，改善提早減速時機。
+- 距離來源穩定後，再做最後 5-10 m stop-and-hold 與白線 offset。
+
+完整現況整理見：[Toyota Sienna TSS2.5+ / TSS3-lite 煞車輔助現況](toyota_sienna_braking_assist_current.md)
+
 ## Stage 1: Shadow 距離驗證
 
 - C3X 上線後，同步 GPS+OSM 距離 sidecar。
@@ -31,4 +41,3 @@
 - 將每個功能拆成可安裝/可移除的 Patch API 項目。
 - 紅燈偵測、距離 sidecar、UI、planner control 分開管理。
 - restore 必須能跨重開機保存，但不強制自動重啟 openpilot。
-

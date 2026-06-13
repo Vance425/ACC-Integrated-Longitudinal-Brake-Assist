@@ -24,6 +24,7 @@
 
 ## 重要文件
 
+- [Toyota Sienna TSS2.5+ / TSS3-lite 煞車輔助現況](docs/toyota_sienna_braking_assist_current.md)
 - [目前進度](docs/progress_20260608.md)
 - [系統架構](docs/architecture.md)
 - [qlog replay 結果](docs/qlog_replay_results_20260608.md)
