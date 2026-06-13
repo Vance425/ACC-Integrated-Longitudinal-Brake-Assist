@@ -1,8 +1,21 @@
-# Toyota Sienna TSS2.5+ / TSS3-lite Braking Assist 現況
+# ACC-Integrated-Longitudinal-Brake-Assist
+
+中文名稱：整合式縱向煞車輔助系統
 
 更新日期：2026-06-13
 
-這份文件整理目前 Toyota Sienna TSS2.5+ 上的 TSS3-lite 煞車輔助內容。目標不是取代原廠安全系統，而是在 OP-long / sunnypilot 架構下，提供紅燈、停止線、前車減速、速限、彎道與匝道的保守輔助，並把狀態清楚顯示在 C3X UI 與 qlog debug 裡。
+這份文件整理目前 Toyota Sienna TSS2.5+ 上的 `ACC-Integrated-Longitudinal-Brake-Assist`。它整合 ACC、OP-long 與 TSS assist 相關的縱向控制輔助，涵蓋加減速、跟車、紅燈 prepare、停止線 bridge、速限 cap、彎道/匝道減速與最後 stop/hold。
+
+## 命名原因
+
+`ACC-Integrated-Longitudinal-Brake-Assist` 比單純稱為「紅燈停車」或「TSS3-lite 煞車」更準確，原因如下：
+
+- `ACC-Integrated`：這套系統不是獨立取代原車 ACC，而是和 ACC、OP-long、sunnypilot / openpilot 的縱向控制堆疊一起工作。
+- `Longitudinal`：功能範圍是車輛縱向控制，也就是加速、減速、跟車、煞停與 stop/hold，不包含橫向轉向控制本身。
+- `Brake`：目前主要優化目標仍是減速與煞車時機，包括紅燈、停止線、前車、速限與彎道減速。
+- `Assist`：保留輔助系統語氣，避免讓人誤以為它是完全自動煞車、AEB，或能取代駕駛判斷。
+
+因此，這個名稱比較符合目前實際架構：它是「整合 ACC / OP-long / TSS assist 的縱向煞車輔助層」，不是完全自動駕駛，也不是單一紅燈停止功能。
 
 ## 核心原則
 

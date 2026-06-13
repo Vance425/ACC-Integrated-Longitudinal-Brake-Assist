@@ -4,6 +4,8 @@
 
 這個 repo 主要給自己研究和復盤用，所以文件以繁體中文為主。原始 qlog、qcamera、GPS 軌跡、車輛識別資料不放進來，只保留程式、設計筆記、測試摘要和可重跑工具。
 
+目前正式整理名稱為 `ACC-Integrated-Longitudinal-Brake-Assist`（整合式縱向煞車輔助系統）。這個名稱比較準確，因為 ACC、OP-long、TSS assist 都屬於車輛縱向控制範圍，涵蓋加減速、跟車與煞停；而 `Assist` 保留輔助系統定位，不會讓人誤以為它是完全自動煞車或取代駕駛。
+
 ## 目前狀態
 
 - 紅燈 prepare / braking 邏輯已經在 C3X stack 上做過實車測試，但仍有「太晚才剎」「剎車力道太弱」「超線」問題。
@@ -24,7 +26,7 @@
 
 ## 重要文件
 
-- [Toyota Sienna TSS2.5+ / TSS3-lite 煞車輔助現況](docs/toyota_sienna_braking_assist_current.md)
+- [ACC-Integrated-Longitudinal-Brake-Assist 整合式縱向煞車輔助系統](docs/acc_integrated_longitudinal_brake_assist.md)
 - [目前進度](docs/progress_20260608.md)
 - [系統架構](docs/architecture.md)
 - [qlog replay 結果](docs/qlog_replay_results_20260608.md)

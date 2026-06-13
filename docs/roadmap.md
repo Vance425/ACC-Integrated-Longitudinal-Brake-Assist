@@ -8,7 +8,7 @@
 - 若主要是 `GPS FAR`，調整 GPS start/soft/brake/hard bands，改善提早減速時機。
 - 距離來源穩定後，再做最後 5-10 m stop-and-hold 與白線 offset。
 
-完整現況整理見：[Toyota Sienna TSS2.5+ / TSS3-lite 煞車輔助現況](toyota_sienna_braking_assist_current.md)
+完整現況整理見：[ACC-Integrated-Longitudinal-Brake-Assist 整合式縱向煞車輔助系統](acc_integrated_longitudinal_brake_assist.md)
 
 ## Stage 1: Shadow 距離驗證
 
