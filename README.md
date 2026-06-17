@@ -1,5 +1,9 @@
 # Toyota Sienna TSS2.5+ 整合式縱向煞車輔助研究
 
+![C3X UI showing TSS stop status, stop-line card, and brake gauge](docs/assets/c3x-ui-brake-assist-preview.png)
+
+上圖為 C3X 實車 UI 測試畫面，包含 TSS 停車狀態、STOP LINE 提示、煞車力道圓形儀表與原廠 ACC / OP-long 整合資訊。
+
 更新日期：2026-06-17
 
 本文整理 Toyota Sienna TSS2.5+ 在 comma C3X / sunnypilot / openpilot 架構下，針對「縱向煞車輔助」所做的研究、實作與路測觀察。此系統目前定位為駕駛輔助研究，不是自動駕駛，也不是 AEB 或取代駕駛決策的安全系統。
